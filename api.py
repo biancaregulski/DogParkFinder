@@ -1,10 +1,14 @@
-from flask import Flask, jsonify, request, abort, make_response
-from google_maps_utilities import get_polyline_from_addresses, get_dog_parks_for_location
-from typing import Tuple
-from enum import Enum
+from flask import Flask, jsonify, request
+import os
+
+import googlemaps
+
+from google_maps_utilities import get_midpoint_for_addresses, get_dog_parks_for_location
 from transportation import Transportation
 
 app =  Flask(__name__)
+gmaps = googlemaps.Client(key=os.environ.get('GOOGLE_MAPS_API_KEY'))
+
 
 @app.route('/health')
 def healthcheck():
@@ -14,45 +18,40 @@ def healthcheck():
 def get_optimal_park():
 	args = request.args
 	for required in ['origin', 'destination']:
-		# breakpoint()
 		# check for blank or empty params
 		if not args.get(required):
-			return abort(make_response("error: missing param: '{}'".format(required)), 400)
+			return jsonify(status="missing_input", message="Missing param: '{}'".format(required)), 422
 
 	origin = args.get('origin')
 	destination = args.get('destination')
 	transportation = args.get('transportation')
+	use_multiple_routes = args.get('multiple_routes')
 
-	if transportation and transportation not in Transportation._member_map_.values():
-		abort(make_response("error: invalid transportation param: '{}'".format(transportation)), 400)
+	# transportation is optional but must be in enum if present
+	if transportation and transportation not in Transportation.get_values():
+		return jsonify(status="invalid_input", message="Invalid transportation param: '{}'".format(transportation)), 400
 	
 	try:
-		midpoint = get_midpoint_for_address(origin, destination, transportation)
-	except:
-		abort(400, 'error: could not access polyline')
-	
-	dog_parks = get_dog_parks_for_location(midpoint)
-		
-	data =  {
+		midpoint = get_midpoint_for_addresses(gmaps, origin, destination, transportation, use_multiple_routes)
+		dog_parks = get_dog_parks_for_location(gmaps, midpoint)
+	except Exception as e:
+		return jsonify(status="server_error", message=e.message), 400
+		# TODO: narrow exceptions
+
+	data = {
 		'status': 'success',
-		'dog_parks': str(dog_parks)
+		'results': (dog_parks[0] if dog_parks else [])
 	}
-	return make_response(jsonify(data), 200)
-	
 
-def get_midpoint_for_address(origin: str, destination: str, multiple: bool = True):
-	pl = get_polyline_from_addresses(origin, destination)
-	# get the midpoint in the polyline by getting the middle index of the array of points
-	mid_index = int(len(pl) / 2 + 1)
-	return pl[mid_index]
-
+	return jsonify(data), 200
 
 #### OPTIONS for finding dog park
 # * = origins
 # o = destinations (dog parks)
 
 # option: haversine distance for the shape of the earth
-# issue: doesn't take into account bodies of water, traffic, impassible areas, etc.
+# pro: not reliant on api beyond getting lat/long coordinates
+# con: doesn't take into account bodies of water, traffic, impassible areas, etc.
 # --------------------------------------
 # |            |________|              |
 # |          o |_bridge_|              |
@@ -83,7 +82,7 @@ def get_midpoint_for_address(origin: str, destination: str, multiple: bool = Tru
 # |                                    |
 # |                                    |
 # |                                    |
+# |                                    |
 # |                o                   |
 # |                                    |
 # --------------------------------------
-
