@@ -3,7 +3,7 @@ import os
 
 import googlemaps
 
-from google_maps_utilities import get_midpoint_for_addresses, get_dog_parks_for_location
+from google_maps_helper import get_midpoint_for_addresses, get_dog_parks_for_location
 from transportation import Transportation
 
 app =  Flask(__name__)
@@ -44,45 +44,3 @@ def get_optimal_park():
 	}
 
 	return jsonify(data), 200
-
-#### OPTIONS for finding dog park
-# * = origins
-# o = destinations (dog parks)
-
-# option: haversine distance for the shape of the earth
-# pro: not reliant on api beyond getting lat/long coordinates
-# con: doesn't take into account bodies of water, traffic, impassible areas, etc.
-# --------------------------------------
-# |            |________|              |
-# |          o |_bridge_|              |
-# |            |        |              |
-# |            |        |              |
-# |            | river  |              |
-# |        *   |        |   *          |
-# |            |        | o            |
-# |            |        |              |
-# |            |        |              |
-# |            |        |              |
-# |            |        |              |
-# |            |        |              |
-# |            |        |              |
-# --------------------------------------
-
-# option: find middle of route that optimizes time 
-# issue: faster travel time but not closer dog park at midpoint
-# --------------------------------------
-# |                o                   |
-# |               ____                 |
-# |             /      \               |
-# |            |        |              |
-# |            |  pond  |              |
-# |        *   |        |   *          |
-# |         \   \ ____ /   /           |
-# |          \____________/            |
-# |                                    |
-# |                                    |
-# |                                    |
-# |                                    |
-# |                o                   |
-# |                                    |
-# --------------------------------------
