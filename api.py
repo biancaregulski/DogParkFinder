@@ -32,10 +32,10 @@ def get_optimal_park():
 		return jsonify(status="invalid_input", message="Invalid transportation param: '{}'".format(transportation)), 400
 	
 	try:
-		midpoint = get_midpoint_for_addresses(gmaps, origin, destination, transportation, use_multiple_routes)
+		midpoint = get_midpoint_for_addresses(gmaps, origin, destination, use_multiple_routes)
 		dog_parks = get_dog_parks_for_location(gmaps, midpoint)
 	except Exception as e:
-		return jsonify(status="server_error", message=e.message), 400
+		return jsonify(status="server_error", message=str(e)), 400
 		# TODO: narrow exceptions
 
 	data = {
