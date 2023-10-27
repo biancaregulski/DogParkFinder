@@ -1,9 +1,8 @@
 from flask import Flask, jsonify, request, abort, make_response
-from google_maps_utilities import get_address_from_geolocation, get_polyline_from_addresses, get_dog_parks
-
-
-
+from google_maps_utilities import get_polyline_from_addresses, get_dog_parks_for_location
 from typing import Tuple
+from enum import Enum
+from transportation import Transportation
 
 app =  Flask(__name__)
 
@@ -11,135 +10,80 @@ app =  Flask(__name__)
 def healthcheck():
 	return { 'status': 'ok' }
 
-@app.route('/coordinates', methods=['GET'])
-def get_coordinates():
-# def get_coordinates() -> dict[str, float]:
+@app.route('/park', methods=['GET'])
+def get_optimal_park():
 	args = request.args
-	address = args.get('address')
-	return get_address_from_geolocation()
-	# if address is None:
+	for required in ['origin', 'destination']:
+		# breakpoint()
+		# check for blank or empty params
+		if not args.get(required):
+			return abort(make_response("error: missing param: '{}'".format(required)), 400)
 
-@app.route('/polyline', methods=['GET'])
-def get_polyline():
-# def get_coordinates() -> dict[str, float]:
-	args = request.args
 	origin = args.get('origin')
 	destination = args.get('destination')
+	transportation = args.get('transportation')
+
+	if transportation and transportation not in Transportation._member_map_.values():
+		abort(make_response("error: invalid transportation param: '{}'".format(transportation)), 400)
+	
 	try:
-		pl = get_polyline_from_addresses(origin, destination)
-		midpoint =  get_midpoint_from_polyline(pl)
+		midpoint = get_midpoint_for_address(origin, destination, transportation)
 	except:
 		abort(400, 'error: could not access polyline')
 	
-	dog_parks = get_dog_parks(midpoint)
+	dog_parks = get_dog_parks_for_location(midpoint)
 		
 	data =  {
 		'status': 'success',
 		'dog_parks': str(dog_parks)
 	}
 	return make_response(jsonify(data), 200)
-
-
-
-def get_midpoint_from_polyline(pl: list[Tuple[float, float]]) -> Tuple[float, float]:
-    mid_index = int(len(pl) / 2 + 1)
-
-    return pl[mid_index]
-
-# @app.route('/park', methods=['GET'])
-# def get_optimal_park() -> dict[str, str]:
-# 	args = request.args
-# 	return {
-# 		'name': 'Cambridge Dog Park',
-# 		'address': '400 Main St. Cambridge MA 02100',
-# 		'latitude': 45,
-# 		'longitude': 71
-#     }
-
-# @app.route('/top_parks', methods=['GET'])
-# def get_optimal_parks() -> list[dict[str, str]]:
-# 	args = request.args
-# 	return [
-# 		{
-#             'name': 'Cambridge Dog Park',
-#             'address': '400 Main St. Cambridge MA 02100',
-#             'latitude': 45,
-#             'longitude': 71
-#         }
-#     ]
-
-# @app.route('/foo', methods=['POST'])
-# def foo():
-# 	data = request.json
-
-
-# start_locations: [
-#     {
-#         "lat": 42.5,
-#         "long": 71.0
-#     },
-#     {
-#         "lat": 42.7,
-#         "long": 72.3
-#     },
-#     {
-#         "lat": 41.5,
-#         "long": 70.4
-#     }
-# ]
-# radius_miles: 5
-# page_size: 5
-
-
-
-# class StartLocation:
-# 	auto id
-# 	float latitude
-# 	float longitude
-
-#     def __init__(self, latitude, longitude):
-#         self.latitude = latitude
-# 		self.longitude = longitude
 	
-#     def get_average_coordinates():
-#         avg_lat = (float(sum(loc['lat'] for loc in start_locations)) / len(start_locations))
-#         avg_long = (float(sum(loc['long'] for loc in start_locations)) / len(start_locations))
-# 		return { avg_lat, avg_long}
 
-#     def get_fair_coordinates():
-# 	avg_lat = mean(max_lat, min_lat)
-#     avg_long = mean(max_long, min_long)
+def get_midpoint_for_address(origin: str, destination: str, multiple: bool = True):
+	pl = get_polyline_from_addresses(origin, destination)
+	# get the midpoint in the polyline by getting the middle index of the array of points
+	mid_index = int(len(pl) / 2 + 1)
+	return pl[mid_index]
 
-# print (avg_lat, avg_long)
 
-# call api to find doog park closest to avg lat and long
+#### OPTIONS for finding dog park
+# * = origins
+# o = destinations (dog parks)
 
-# option 1:
-# park_lat = mean(lats.each)
-# park_long = mean(longs.each)
+# option: haversine distance for the shape of the earth
+# issue: doesn't take into account bodies of water, traffic, impassible areas, etc.
 # --------------------------------------
+# |            |________|              |
+# |          o |_bridge_|              |
+# |            |        |              |
+# |            |        |              |
+# |            | river  |              |
+# |        *   |        |   *          |
+# |            |        | o            |
+# |            |        |              |
+# |            |        |              |
+# |            |        |              |
+# |            |        |              |
+# |            |        |              |
+# |            |        |              |
+# --------------------------------------
+
+# option: find middle of route that optimizes time 
+# issue: faster travel time but not closer dog park at midpoint
+# --------------------------------------
+# |                o                   |
+# |               ____                 |
+# |             /      \               |
+# |            |        |              |
+# |            |  pond  |              |
+# |        *   |        |   *          |
+# |         \   \ ____ /   /           |
+# |          \____________/            |
 # |                                    |
-# |    *                               |
 # |                                    |
 # |                                    |
-# |    *                               |
-# |        o                           |
-# |                                    |
-# |    *                           *   |
+# |                o                   |
 # |                                    |
 # --------------------------------------
 
-# option 2:
-# park_lat = mean(max_lat, min_lat)
-# park_long = mean(max_long, min_long)
-# --------------------------------------
-# |                                    |
-# |    *                               |
-# |                                    |
-# |                                    |
-# |    *             o                 |
-# |                                    |
-# |                                    |
-# |    *                           *   |
-# |                                    |
-# --------------------------------------
