@@ -1,12 +1,13 @@
 # DogParkFinder
-Find closest dog parks from 2 different origin points
+API for finding closest dog parks from 2 different origin points.
+Written in Python Flask with Google Maps API.
 ```
 Sample call: 
 GET /park
 
 arguments:
 address1 (string): description of 1st address in natural language
-address2 (string):description of 2nd address in natural language
+address2 (string): description of 2nd address in natural language
 transportation (string, optional): transit method ('driving' (default), 'walking', 'biking', 'transit')
 ```
 On local dev, to find closest dog park between Boston Common and Porter Square in Cambridge by walking:
