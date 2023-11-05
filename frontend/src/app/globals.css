@@ -6,6 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-end-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
+  --information-rgb: 250, 246, 242
 }
 
 @media (prefers-color-scheme: light) {
@@ -13,6 +14,7 @@
     --foreground-rgb: 245, 244, 243;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
+    --information-rgb: 250, 246, 242
   }
 }
 
@@ -24,4 +26,9 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+.information {
+  color: rgb(var(--background-start-rgb));
+  background: rgb(var(--information-rgb));
 }

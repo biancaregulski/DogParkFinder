@@ -21,7 +21,7 @@ const AddressForm = () => {
                     <input type="text" className="form-control" id="address2" aria-describedby="address2Input" placeholder="Enter address here"/>
                 </div>
                 <div className=" col-md-1">
-                    <button type="submit" className="btn btn-primary mb-2 text-black">Submit</button>
+                    <input type="submit" className="btn btn-primary mb-2 text-black" value="Submit"/>
                 </div>
                 
             </div>

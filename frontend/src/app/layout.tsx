@@ -6,6 +6,7 @@ import './globals.css'
 
 import NavBar from "./components/navbar";
 
+require('dotenv').config()
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
