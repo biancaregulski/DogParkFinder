@@ -1,0 +1,9 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+
+$theme-colors: map-merge($theme-colors, (
+    "primary": #1f7331,
+    "danger": #741e1a
+));
+
+@import "bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
