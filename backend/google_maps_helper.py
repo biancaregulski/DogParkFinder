@@ -4,6 +4,7 @@ from typing import Tuple
 import math
 
 import polyline
+from functools import cache
 
 from general_helper import first, last
 from transportation import Transportation
@@ -23,6 +24,7 @@ def get_midpoint_for_addresses(gmaps, origin: str, destination: str, use_multipl
     mid_distance = get_distance_of_polyline(coordinates) / 2
     return get_point_on_polyline(mid_distance, coordinates)
 
+@cache
 def get_direction_polylines(
     gmaps, 
     origin: str, 
@@ -52,6 +54,7 @@ def get_direction_polylines(
 
     return polylines
 
+@cache
 def get_dog_parks_for_location(gmaps, location: Coordinate) -> list[dict]:
     """
     Call Google Maps API to retrieve optimal dog parks for location 
