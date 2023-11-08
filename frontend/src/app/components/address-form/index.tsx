@@ -1,7 +1,14 @@
-
+'use client'
 const AddressForm = () => {
+
+    const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        alert(`The name you entered was: ${address1}`)
+        return true
+    }
+    
     return(
-        <form className='mb-3'>
+        <form className='mb-3' onSubmit={handleSubmit}>
             <div className='row'>
                 <div className="col-md-5">
                     <label htmlFor="address1">First address</label>

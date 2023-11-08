@@ -9,15 +9,18 @@ type LocationInformationProps = {
     address2: string;
 };
 type LocationInformationState = {
-    parkAddress: string;
+    name: string;
+    address: string;
+    location: {}
 };
 
 const LocationInformation = ({address1, address2}: LocationInformationProps) => {
-    const [locationDetails, setLocationDetails] = useState([])
+    const [locationDetails, setLocationDetails] = useState<LocationInformationState | null>(null)
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         function fetchAPI() {
+            console.log('hello')
             const url = process.env.REACT_APP_FLASK_API_URL + "/park"
             setIsLoading(true);
             axios.get(url, {
@@ -27,6 +30,7 @@ const LocationInformation = ({address1, address2}: LocationInformationProps) => 
                 }
             }).then(response => {
                 if (response.status == 200) {
+                    console.log(response.data.results)
                     setLocationDetails(response.data.results);
                     setIsLoading(false);
                 }
@@ -49,16 +53,19 @@ const LocationInformation = ({address1, address2}: LocationInformationProps) => 
         return <h3>Loading...</h3>
     }
 
-    let locationText;
+    var locationText;
     console.log('location details length');
-    console.log(locationDetails.length);
-    if (locationDetails.length > 0) {
+    console.log(locationDetails);
+    if (locationDetails) {
         locationText = (
-            <p>success</p>
+            <>
+                <h3>{locationDetails.name}</h3>
+                <p>{locationDetails.address}</p>
+            </>
         );
     }
     else {
-        locationText = <p>No information available.</p>
+        locationText = <p>Loading...</p>
     }
 
     return(
