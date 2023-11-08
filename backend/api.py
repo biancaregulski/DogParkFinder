@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import os
 
 import googlemaps
@@ -7,6 +8,7 @@ from google_maps_helper import get_midpoint_for_addresses, get_dog_parks_for_loc
 from transportation import Transportation
 
 app =  Flask(__name__)
+cors = CORS(app)
 gmaps = googlemaps.Client(key=os.environ.get('GOOGLE_MAPS_API_KEY'))
 
 
@@ -16,6 +18,7 @@ def healthcheck():
 
 @app.route('/park', methods=['GET'])
 def get_optimal_park():
+	return {"results":{"address":"Watertown, MA 02473, United States","location":{"lat":42.366578,"lng":-71.149141},"name":"Filippello Dog Park"},"status":"success"}
 	args = request.args
 	for required in ['address1', 'address2']:
 		# check for blank or empty params

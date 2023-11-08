@@ -31,4 +31,5 @@ body {
 .information {
   color: rgb(var(--background-start-rgb));
   background: rgb(var(--information-rgb));
+  padding: 1rem 2rem;
 }

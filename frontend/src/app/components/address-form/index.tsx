@@ -1,7 +1,7 @@
 
 const AddressForm = () => {
     return(
-        <form className='py-10 px-20'>
+        <form className='mb-3'>
             <div className='row'>
                 <div className="col-md-5">
                     <label htmlFor="address1">First address</label>
@@ -23,7 +23,6 @@ const AddressForm = () => {
                 <div className=" col-md-1">
                     <input type="submit" className="btn btn-primary mb-2 text-black" value="Submit"/>
                 </div>
-                
             </div>
         </form>
     );
