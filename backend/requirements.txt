@@ -10,7 +10,6 @@ Babel==2.13.0
 backcall==0.2.0
 beautifulsoup4==4.12.2
 bleach==6.1.0
-certifi @ file:///private/tmp/python-certifi-20231008-5803-12332sz/certifi-2023.7.22
 cffi==1.16.0
 charset-normalizer==3.3.0
 comm==0.1.4
@@ -106,3 +105,17 @@ webcolors==1.13
 webencodings==0.5.1
 websocket-client==1.6.4
 widgetsnbextension==4.0.9
+googlemaps==4.10.0
+polyline==2.0.1
+python-dotenv==1.0.0
+altgraph
+APIFlask==2.0.2
+apispec==6.3.0
+blinker==1.6.3
+certifi==2023.7.22
+charset-normalizer==3.3.1
+click==8.1.7
+Flask==3.0.0
+Flask-HTTPAuth==4.8.0
+flask-marshmallow==0.15.0
+future
