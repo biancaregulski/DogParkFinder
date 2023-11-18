@@ -14,7 +14,8 @@
     --foreground: #2d2015;
     --background: #fffbf1;
     --background-end-rgb: #fffbf1;
-    --information: #fcdeb7
+    --information: #fcdeb7;
+    --highlight: #ffffff;
   }
 }
 
@@ -29,4 +30,13 @@ body {
   background: var(--information);
   padding: 1rem 2rem;
   border-radius: 10px;
+}
+
+.highlight {
+  color: var(--foreground);
+  background: var(--highlight);
+}
+
+html, body {
+  height: 100%;
 }

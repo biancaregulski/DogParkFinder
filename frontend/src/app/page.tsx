@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import AddressForm from "./components/address-form"
 import LocationInformation from "./components/location-information"
-import Map from "./components/map"
+import MapDisplay from "./components/map-display"
 
 interface FormElements extends HTMLFormControlsCollection {
   address1: HTMLInputElement
@@ -25,28 +25,20 @@ export default function Home() {
 
     event.preventDefault();
     // const elements = event.currentTarget.elements as FormElements;
-    console.log(elements)
-    console.log(elements.address1.value)
-    console.log(typeof(elements.address2))
     setAddress1(elements.address1.value)
     setAddress2(elements.address2.value)
-
-  
   }
 
   return (
     <>
-      <div className="container mx-auto px-4 py-10">
-        <p>Tell us two addresses and we&apos;ll return the closest dog parks in between them.</p>
-        <div className='py-10 px-20'>
-          <AddressForm handleSubmit={handleSubmit}/>
-          <LocationInformation address1={address1} address2 = {address2} />
-          <Map />
+      <div className="container px-20 mx-20 py-10 h-100">
+        <div className="pb-4">
+          <p>Tell us two addresses and we&apos;ll return the closest dog parks in between them.</p>
         </div>
+        <AddressForm handleSubmit={handleSubmit}/>
+        { (address1 && address2) && <LocationInformation address1={address1} address2 = {address2} /> }
+        <MapDisplay />
         <div className="w-full h-screen"></div>
-        <p>
-          Lorem Ipsum is simply dummy text ...
-        </p>
       </div>
     </>
   );

@@ -4,10 +4,10 @@ import Link from "next/link";
 const Navbar = () => {
   return (
     <>
-      <div className="align-middle w-full h-14 bg-emerald-800 sticky top-0">
-        <div className="mx-axuto px-4 h-full">
+      <div className="align-middle w-full h-14 bg-emerald-800">
+        <div className="mx-auto px-4 h-full">
           <div className="flex justify-between items-center h-full">
-            <ul className="hidden md:flex gap-x-6 text-white">
+            <ul className="md:flex gap-x-6 text-white">
               <li>
                 <Link href="/">
                   <p>Park Finder</p>
