@@ -64,10 +64,8 @@ const LocationInformation = ({address1, address2}: LocationInformationProps) => 
     }
 
     return(
-        <div className="row">
-            <div className='information mb-3 col-md-12'>
-                <>{isLoading ? loaderDisplay() : locationText}</>
-            </div>
+        <div className='information mb-3 col-md-12'>
+            <>{isLoading ? loaderDisplay() : locationText}</>
         </div>
     );
 }
