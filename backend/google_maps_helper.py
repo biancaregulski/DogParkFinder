@@ -121,3 +121,25 @@ def get_point_on_line_segment(target_distance: float, p1: Coordinate, p2: Coordi
         first(p1) + (first(unit_vector) * target_distance),
         last(p1) + (last(unit_vector) * target_distance)
     )
+
+def format_results(gmaps, origin: str, destination: str, dog_parks: list[dict]) -> dict:
+    address1_result = {
+        'address': origin,
+        'location': gmaps.geocode(origin)[0]['geometry']['location']
+    }
+
+    address2_result = {
+        'address': destination,
+        'location': gmaps.geocode(destination)[0]['geometry']['location']
+    }
+
+    full_results = {
+        'address1': address1_result,
+        'address2': address2_result,
+        'park': (dog_parks[0] if dog_parks else [])
+    }
+
+    return {
+        'status': 'success',
+        'results': full_results
+    }

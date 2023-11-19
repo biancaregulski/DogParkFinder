@@ -4,7 +4,7 @@ import os
 
 import googlemaps
 
-from google_maps_helper import get_midpoint_for_addresses, get_dog_parks_for_location
+from google_maps_helper import get_midpoint_for_addresses, get_dog_parks_for_location, format_results
 from transportation import Transportation
 
 app =  Flask(__name__)
@@ -18,7 +18,7 @@ def healthcheck():
 
 @app.route('/park', methods=['GET'])
 def get_optimal_park():
-	return {"results":{"address":"Watertown, MA 02473, United States","location":{"lat":42.366578,"lng":-71.149141},"name":"Filippello Dog Park"},"status":"success"}
+	# return {"results":{"address":"Watertown, MA 02473, United States","location":{"lat":42.366578,"lng":-71.149141},"name":"Filippello Dog Park"},"status":"success"}
 	args = request.args
 	for required in ['address1', 'address2']:
 		# check for blank or empty params
@@ -36,9 +36,6 @@ def get_optimal_park():
 	midpoint = get_midpoint_for_addresses(gmaps, origin, destination)
 	dog_parks = get_dog_parks_for_location(gmaps, midpoint)
 
-	data = {
-		'status': 'success',
-		'results': (dog_parks[0] if dog_parks else [])
-	}
+	data = format_results(gmaps, origin, destination, dog_parks)
 
 	return jsonify(data), 200

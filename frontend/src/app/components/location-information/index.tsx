@@ -4,15 +4,23 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 
-type LocationInformationProps = {
+import MapDisplay from "../map-display"
+import { Interface } from 'readline';
+
+interface LocationInformationProps {
     address1: string;
     address2: string;
 };
-type LocationInformationState = {
+interface LocationInformationState {
     name: string;
     address: string;
-    location: {}
+    location: Location;
 };
+
+interface Location {
+    lat: number;
+    lng: number
+}
 
 const LocationInformation = ({address1, address2}: LocationInformationProps) => {
     const [locationDetails, setLocationDetails] = useState<LocationInformationState | null>(null)
@@ -21,7 +29,6 @@ const LocationInformation = ({address1, address2}: LocationInformationProps) => 
     useEffect(() => {
         function fetchAPI() {
             const url = process.env.REACT_APP_FLASK_API_URL + "/park"
-            console.log(url)
             setIsLoading(true);
             axios.get(url, {
                 params: {
@@ -30,6 +37,7 @@ const LocationInformation = ({address1, address2}: LocationInformationProps) => 
                 }
             }).then(response => {
                 if (response.status == 200) {
+                    console.log(response.data.results)
                     setLocationDetails(response.data.results);
                     setIsLoading(false);
                 }
@@ -38,7 +46,7 @@ const LocationInformation = ({address1, address2}: LocationInformationProps) => 
                 }
             }).catch((error) => {
                 if( error.response ){
-                    console.log(error.response.data); // => the response payload 
+                    console.log(error.response.data);
                 }
             });
         }
@@ -50,22 +58,24 @@ const LocationInformation = ({address1, address2}: LocationInformationProps) => 
         return <h3>Loading...</h3>
     }
 
-    var locationText;
+    var locationDisplay;
     if (locationDetails) {
-        locationText = (
+        locationDisplay = (
             <>
-                <h3>{locationDetails.name}</h3>
-                <p>{locationDetails.address}</p>
+                <div className="location-details">
+                    <h3>{locationDetails.name}</h3>
+                    <p>{locationDetails.address}</p>
+                </div>
+                <MapDisplay lat={locationDetails.location.lat} lng={locationDetails.location.lng}/>
             </>
         );
     }
-    else {
-        locationText = <p>Loading...</p>
-    }
 
     return(
-        <div className='information mb-3 col-md-12'>
-            <>{isLoading ? loaderDisplay() : locationText}</>
+        <div className='information mb-3 col-md-12 h-100'>
+            <>
+                {isLoading ? loaderDisplay() : locationDisplay}
+            </>
         </div>
     );
 }

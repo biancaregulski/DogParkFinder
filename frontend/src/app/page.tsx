@@ -3,7 +3,6 @@
 import { FormEvent, useState } from "react";
 import AddressForm from "./components/address-form"
 import LocationInformation from "./components/location-information"
-import MapDisplay from "./components/map-display"
 
 interface FormElements extends HTMLFormControlsCollection {
   address1: HTMLInputElement
@@ -36,8 +35,12 @@ export default function Home() {
           <p>Tell us two addresses and we&apos;ll return the closest dog parks in between them.</p>
         </div>
         <AddressForm handleSubmit={handleSubmit}/>
-        { (address1 && address2) && <LocationInformation address1={address1} address2 = {address2} /> }
-        <MapDisplay />
+        { (address1 && address2) && (
+            <>
+              <LocationInformation address1={address1} address2 = {address2} /> 
+            </>
+          )
+        }
         <div className="w-full h-screen"></div>
       </div>
     </>
