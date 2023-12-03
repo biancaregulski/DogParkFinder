@@ -41,6 +41,8 @@ a {
     --background-end-rgb: #fffbf1;
     --focus: #FFF2D0;
     --nav: #065f46;
+    --button: #065f46;
+    --button-hover: #004b36;
     --highlight: #ffe087;
     --midlight: #E1403D;
     --light-border: #f0e0b4;
@@ -106,6 +108,22 @@ html, body {
 
 .mapContainerWrapper div:first-child{
   position:relative !important;
+}
+
+.submit-button {
+  background: var(--button);
+  border-color: var(--button);
+  color: var(--background)
+}
+
+.submit-button:hover {
+  background: var(--button-hover);
+  border-color: var(--button-hover);
+}
+
+.dropdown {
+  background: var(--highlight);
+  color: var(--foreground);
 }
 
 .google-maps-link {

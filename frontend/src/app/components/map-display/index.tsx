@@ -18,7 +18,6 @@ const MapDisplay = ({address1Information, address2Information, parksInformation}
   var markers: (google.maps.marker.AdvancedMarkerElement | null | undefined)[] = [];
   const [infowindowShown, setInfowindowShown] = useState(-1);
 
-
   // create marker references for each park and the two address markers
   for (let i = 0; i < parksInformation.length + 2; i++) {
     [markerRefs[i], markers[i]] = useAdvancedMarkerRef()
@@ -61,13 +60,14 @@ const MapDisplay = ({address1Information, address2Information, parksInformation}
     })
   )
 
+  // list each park on the sidebar
   var listOfParks = (
     parksInformation.map((park, i) => {
       return (
         <div 
           className="park-item inline-flex"
           id={infowindowShown == i ? "park-item-selected" : ""}
-          onClick={() => toggleInfoWindow(i)}
+          onClick={() => toggleInfoWindow(i)}     // focus pin and display info window if selecting corresponding list object
         >
           <div className='mr-3'>
             <h3>{(i + 1).toString() + '.'}</h3>

@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-
 import MapDisplay from "../map-display"
 
 interface LocationDisplayProps {
     address1: string;
     address2: string;
+    transportation: string;
 };
 
 export interface LocationInformation {
@@ -23,7 +23,7 @@ export interface Coordinate {
     lng: number
 }
 
-const LocationDisplay = ({address1, address2}: LocationDisplayProps) => {
+const LocationDisplay = ({address1, address2, transportation}: LocationDisplayProps) => {
     const [parksInformation, setLocationDetails] = useState<Array<LocationInformation> | []>([])
     const [address1Information, setAddress1Information] = useState<LocationInformation | null>(null);
     const [address2Information, setAddress2Information] = useState<LocationInformation | null>(null);
@@ -31,12 +31,14 @@ const LocationDisplay = ({address1, address2}: LocationDisplayProps) => {
 
     useEffect(() => {
         function fetchAPI() {
+            console.log(transportation);
             const url = process.env.REACT_APP_FLASK_API_URL + "/parks"
             setIsLoading(true);
             axios.get(url, {
                 params: {
                     address1: address1,
-                    address2: address2
+                    address2: address2,
+                    transportation: transportation
                 }
             }).then(response => {
                 if (response.status == 200) {
