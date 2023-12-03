@@ -16,9 +16,8 @@ gmaps = googlemaps.Client(key=os.environ.get('GOOGLE_MAPS_API_KEY'))
 def healthcheck():
 	return { 'status': 'ok' }
 
-@app.route('/park', methods=['GET'])
+@app.route('/parks', methods=['GET'])
 def get_optimal_park():
-	# return {"results":{"address":"Watertown, MA 02473, United States","location":{"lat":42.366578,"lng":-71.149141},"name":"Filippello Dog Park"},"status":"success"}
 	args = request.args
 	for required in ['address1', 'address2']:
 		# check for blank or empty params
@@ -32,8 +31,14 @@ def get_optimal_park():
 	# transportation is optional but must be in enum if present
 	if transportation and transportation not in Transportation.get_values():
 		return jsonify(status="invalid_input", message="Invalid transportation param: '{}'".format(transportation)), 400
-	
-	midpoint = get_midpoint_for_addresses(gmaps, origin, destination)
+	try:
+		midpoint = get_midpoint_for_addresses(gmaps, origin, destination)
+	except googlemaps.exceptions.ApiError as err:
+		app.logger.error("Error occurred while calling Google Maps API: '{}'".format(err.status))
+		if err.status == 'NOT_FOUND':
+			return jsonify(status="address_not_found", message="Error occurred while calling Google Maps API: Address not found"), 422
+		return jsonify(status="api_error", message="Error occurred while calling Google Maps API: '{}'".format(err.status)), 400
+
 	dog_parks = get_dog_parks_for_location(gmaps, midpoint)
 
 	data = format_results(gmaps, origin, destination, dog_parks)

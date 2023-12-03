@@ -2,15 +2,12 @@
 
 import { FormEvent, useState } from "react";
 import AddressForm from "./components/address-form"
-import LocationInformation from "./components/location-information"
+import LocationDisplay from "./components/location-display"
 
 interface FormElements extends HTMLFormControlsCollection {
   address1: HTMLInputElement
   address2: HTMLInputElement
 }
-
-// type FormElements<U extends string> = HTMLFormControlsCollection & Record<U, HTMLInputElement>
-
 
 export default function Home() {
   const [address1, setAddress1] = useState("");
@@ -18,7 +15,6 @@ export default function Home() {
   const [parkLocation, setParkLocation] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    // const elements = event.currentTarget.elements as FormElements<"id" | "name" | "type" | "amount">
     const elements = event.currentTarget.elements as FormElements
 
 
@@ -37,7 +33,7 @@ export default function Home() {
         <AddressForm handleSubmit={handleSubmit}/>
         { (address1 && address2) && (
             <>
-              <LocationInformation address1={address1} address2 = {address2} /> 
+              <LocationDisplay address1={address1} address2 = {address2} /> 
             </>
           )
         }
