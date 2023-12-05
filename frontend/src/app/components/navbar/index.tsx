@@ -10,7 +10,7 @@ const Navbar = () => {
             <ul className="md:flex gap-x-6 ">
               <li>
                 <Link href="/">
-                  <p>Park Finder</p>
+                  <h3>Park Finder</h3>
                 </Link>
               </li>
             </ul>

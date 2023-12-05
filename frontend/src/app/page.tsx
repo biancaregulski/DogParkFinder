@@ -18,11 +18,9 @@ export default function Home() {
   const [parkLocation, setParkLocation] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    const elements = event.currentTarget.elements as FormElements
-
-
     event.preventDefault();
-    // const elements = event.currentTarget.elements as FormElements;
+
+    const elements = event.currentTarget.elements as FormElements
     setAddress1(elements.address1.value)
     setAddress2(elements.address2.value)
     setTransportation(elements.transportation.value as Transportation)
@@ -32,7 +30,7 @@ export default function Home() {
     <>
       <div className=" px-20 mx-20 py-10 h-100">
         <div className="pb-4">
-          <p>Tell us two addresses and we&apos;ll return the closest dog parks in between them.</p>
+          <p>Tell us two addresses and we&apos;ll return the closest parks in between them.</p>
         </div>
         <AddressForm handleSubmit={handleSubmit}/>
         { (address1 && address2) && (

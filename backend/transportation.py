@@ -3,7 +3,7 @@ from enum import Enum
 
 class Transportation(str, Enum):
     DRIVING = 'driving'
-    BIKING  = 'biking'
+    BIKING  = 'bicycling'
     WALKING = 'walking'
     TRANSIT = 'transit'
 	

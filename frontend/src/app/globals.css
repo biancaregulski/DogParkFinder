@@ -37,15 +37,16 @@ a {
 @media (prefers-color-scheme: light) {
   :root {
     --foreground: #2d2015;
-    --background: #fffbf1;
+    --background: #fffdf7;
     --background-end-rgb: #fffbf1;
+    --information: #dff3e6;
     --focus: #FFF2D0;
     --nav: #065f46;
     --button: #065f46;
     --button-hover: #004b36;
-    --highlight: #ffe087;
+    --highlight: #ffcb3a;
     --midlight: #E1403D;
-    --light-border: #f0e0b4;
+    --light-border: #c9dcd0;
     --link: #00a375;
     --link-hover: #065f46;
   }
@@ -53,19 +54,18 @@ a {
 
 body {
   color: var(--foreground);
-  background: var(--background-end-rgb);
+  background: #fffdf7 ;
   font-family: 'Oxygen', sans-serif;
 }
 
 .information {
   color: var(--foreground);
-  background: var(--focus);
+  background: var(--information);
   border-radius: 10px;
   height: 50vh !important;
 }
 
 .maps-wrapper {
-  overflow: scroll;
   height: 50vh !important;
 }
 
@@ -76,26 +76,27 @@ body {
 
 .park-item-title {
   border-bottom: 1px solid var(--light-border);
-  padding: 0.5em;
+  padding: .5em 1em;
 }
 
 .park-item {
   border-bottom: 1px solid var(--light-border);
-  padding: 0.5em;
-  width: 100%
+  padding: .5em 1em;
+  width: 100%;
+  cursor: pointer;
 }
-
-#park-item-selected {
-  background: var(--highlight);
-}
-
 .park-item:nth-of-type(odd) {
-  background: #fffbf1;
+  /* background: var(--background-end-rgb); */
 }
 
 .park-item:last-child {
   border-bottom: none;
 }
+
+#park-item-selected {
+  background: var(--link);
+}
+
 
 html, body {
   height: 100%;

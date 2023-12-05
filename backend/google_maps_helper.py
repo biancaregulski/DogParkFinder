@@ -9,42 +9,45 @@ from functools import cache
 from general_helper import first, last
 from transportation import Transportation
 
-DOG_PARKS_QUERY_STRING = "dog park"    # Google Maps does not have a specific place_type for dog parks, so we are querying the phrase
+PARKS_QUERY_STRING = "park"
 
 # type alias
 Coordinate = Tuple[float, float]
 
-def get_midpoint_for_addresses(gmaps, origin: str, destination: str, use_multiple_routes: bool = True) -> Coordinate:
+def get_midpoint_for_addresses(gmaps, origin: str, destination: str, transportation: str = Transportation.DRIVING, use_multiple_routes: bool = True) -> Coordinate:
     """
     Find midpoint of route between two addresses
     """
-    polylines = get_direction_polylines(gmaps, origin, destination, use_multiple_routes)
+    polylines = get_direction_polylines(gmaps, origin, destination, transportation, use_multiple_routes)
     
-    coordinates = first(polylines)
-    mid_distance = get_distance_of_polyline(coordinates) / 2
-    return get_point_on_polyline(mid_distance, coordinates)
+    if len(polylines) > 0:
+        coordinates = first(polylines)
+        mid_distance = get_distance_of_polyline(coordinates) / 2
+        return get_point_on_polyline(mid_distance, coordinates)
+    else:
+        return None
 
 # @cache
 def get_direction_polylines(
     gmaps, 
     origin: str, 
     destination: str, 
-    use_multiple_routes: bool = False, 
-    mode: str = Transportation.DRIVING
+    transportation: str = Transportation.DRIVING,
+    use_multiple_routes: bool = True 
     ) -> list[Coordinate]:
     """
     Call Google Maps API to retrieve polyline (points that form continuous line segments) for optimal route between 2 locations
     origin: origin address string (Google Maps is pretty lenient; e.g. 'Central Park' will map onto the park in NYC)
     destination: destination address string
+    transportation: mode of transportation (see Transportation enum)
     use_multiple_routes: whether the api will query for more than 1 route (may result in longer response times)
-    mode: mode of transportation (see Transportation enum)
     """
     
     results = gmaps.directions(
         origin,
         destination,
         alternatives=use_multiple_routes,
-        mode=mode
+        mode=transportation
     )
 
     polylines = []
@@ -56,17 +59,17 @@ def get_direction_polylines(
     return polylines
 
 # @cache
-def get_dog_parks_for_location(gmaps, location: Coordinate) -> list[dict]:
+def get_parks_for_location(gmaps, location: Coordinate) -> list[dict]:
     """
-    Call Google Maps API to retrieve optimal dog parks for location 
+    Call Google Maps API to retrieve optimal parks for location 
     """
-    dog_parks = gmaps.places(
+    parks = gmaps.places(
         location=location,
-        query=DOG_PARKS_QUERY_STRING
+        query=PARKS_QUERY_STRING
     )
     
-    # return specific number of closest dog parks
-    results = dog_parks['results'][0:5]
+    # return specific number of closest parks
+    results = parks['results'][0:5]
     return [
         {
             'id': result['place_id'],
@@ -124,7 +127,7 @@ def get_point_on_line_segment(target_distance: float, p1: Coordinate, p2: Coordi
         last(p1) + (last(unit_vector) * target_distance)
     )
 
-def format_results(gmaps, origin: str, destination: str, dog_parks: list[dict]) -> dict:
+def format_results(gmaps, origin: str, destination: str, parks: list[dict]) -> dict:
     address1_result = {
         'address': origin,
         'location': gmaps.geocode(origin)[0]['geometry']['location'],
@@ -140,7 +143,7 @@ def format_results(gmaps, origin: str, destination: str, dog_parks: list[dict]) 
     full_results = {
         'address1': address1_result,
         'address2': address2_result,
-        'parks': dog_parks
+        'parks': parks
     }
 
     return {

@@ -3,6 +3,7 @@ import {APIProvider, Map, Pin, AdvancedMarker, useAdvancedMarkerRef, InfoWindow}
 import { LocationInformation } from "../location-display"
 import { useState } from 'react';
 import React from 'react';
+import { Wrapper } from "@googlemaps/react-wrapper"
 
 interface MapDisplayProps {
   address1Information: LocationInformation;
@@ -11,17 +12,25 @@ interface MapDisplayProps {
 };
 
 const MapDisplay = ({address1Information, address2Information, parksInformation}: MapDisplayProps) => {
+  const allPlaces =  [address1Information, address2Information, ...parksInformation];
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string;
   const position = {lat: parksInformation[0].location.lat, lng: parksInformation[0].location.lng};
+  const [infowindowShown, setInfowindowShown] = useState(-1);
 
   var markerRefs: (React.Ref<google.maps.marker.AdvancedMarkerElement> | undefined)[] = [];
   var markers: (google.maps.marker.AdvancedMarkerElement | null | undefined)[] = [];
-  const [infowindowShown, setInfowindowShown] = useState(-1);
 
   // create marker references for each park and the two address markers
   for (let i = 0; i < parksInformation.length + 2; i++) {
     [markerRefs[i], markers[i]] = useAdvancedMarkerRef()
   }
+
+  var bounds = new google.maps.LatLngBounds(
+    new google.maps.LatLng(Math.min(...allPlaces.map(place => place.location.lat)), 
+                          Math.min(...allPlaces.map(place => place.location.lng))),
+    new google.maps.LatLng(Math.max(...allPlaces.map(place => place.location.lat)), 
+                          Math.max(...allPlaces.map(place => place.location.lng))),
+  );
 
   const toggleInfoWindow = (i: number) => {
     setInfowindowShown(i);
@@ -32,7 +41,7 @@ const MapDisplay = ({address1Information, address2Information, parksInformation}
       <>
         <AdvancedMarker zIndex={index + 1} position={locationInfo.location} onClick={() => toggleInfoWindow(index)} ref={markerRefs[index]} >
           {isPark ?
-            <Pin background={"var(--highlight)"} glyph={(index + 1).toString()} glyphColor={'#000'} borderColor={'#000'} /> :
+            <Pin background={"var(--highlight)"}  glyphColor={'#000'} borderColor={'#000'} /> :
             <Pin background={"var(--midlight)"} glyphColor={'#000'} borderColor={'#000'} />
           }
         </AdvancedMarker>
@@ -67,10 +76,11 @@ const MapDisplay = ({address1Information, address2Information, parksInformation}
         <div 
           className="park-item inline-flex"
           id={infowindowShown == i ? "park-item-selected" : ""}
+          key = {i}
           onClick={() => toggleInfoWindow(i)}     // focus pin and display info window if selecting corresponding list object
         >
           <div className='mr-3'>
-            <h3>{(i + 1).toString() + '.'}</h3>
+            <h4>{(i + 1).toString() + '.'}</h4>
           </div>
           <div>
             <h4>{park.name}</h4>
@@ -85,16 +95,23 @@ const MapDisplay = ({address1Information, address2Information, parksInformation}
     <div className='inline-flex w-100 h-100'>
       <div className='w-50 h-100'>
           <APIProvider apiKey={googleMapsApiKey}>
-            <Map center={position} zoom={10} disableDefaultUI={false} mapId={'123'}>
+            <Map
+              center={position} 
+              initialBounds={bounds} 
+              disableDefaultUI={false} 
+              mapId={"1"}
+            >
               {parkMarkersWithWindows}
               {addressMarkersWithWindows}
             </Map>
           </APIProvider>
       </div>
-      <div className='w-50 h-100'>
+      <div className='w-50 h-100 overflow-scroll'>
           <div className="location-details">
             <h3 className='park-item-title'>Parks:</h3>
+            <div className='park-list'>
               {listOfParks}
+            </div>
           </div>
       </div>
     </div>
