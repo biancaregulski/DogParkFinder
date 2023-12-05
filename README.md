@@ -3,11 +3,23 @@ API for finding closest dog parks from 2 different origin points.
 Written in Python Flask with Google Maps API.
 
 To run app:
+tab 1:
+```
+cd frontend 
+npm run dev
+```
+tab 2:
+cd backend
+python -m flask run
+
+Find closest dog parks from 2 different origin points
+
+To run app:
 python -m flask run
 
 ```
 Sample call: 
-GET /park
+GET /parks
 
 arguments:
 address1 (string): description of 1st address in natural language
@@ -15,7 +27,7 @@ address2 (string): description of 2nd address in natural language
 transportation (string, optional): transit method ('driving' (default), 'walking', 'biking', 'transit')
 ```
 On local dev, to find closest dog park between Boston Common and Porter Square in Cambridge by walking:
-http://127.0.0.1:5000/park?address1=4%20Charles%20Street.%20Boston,%20MA%2002116&address2=Porter Square, Cambridge MA&transportation=walking
+http://127.0.0.1:5000/parks?address1=4%20Charles%20Street.%20Boston,%20MA%2002116&address2=Porter Square, Cambridge MA&transportation=walking
 
 sample return:
 {"results":{"address":"29 Tudor St, Cambridge, MA 02139, United States","location":{"lat":42.3606643,"lng":-71.1038626},"name":"Tudor Dog Park"},"status":"success"}

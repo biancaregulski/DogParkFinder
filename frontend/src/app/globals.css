@@ -1,0 +1,133 @@
+@tailwind base;
+
+h1 {
+  @apply text-2xl;
+}
+h2 {
+  @apply text-xl;
+}
+h3 {
+  @apply text-lg;
+}
+h4 {
+  @apply text-base;
+}
+h5 {
+  @apply text-sm;
+}
+a {
+  @apply text-blue-600 underline;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground: #000000;
+  --background-end-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
+  --information-rgb: 250, 246, 242
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --foreground: #2d2015;
+    --background: #fffdf7;
+    --background-end-rgb: #fffbf1;
+    --information: #dff3e6;
+    --focus: #FFF2D0;
+    --nav: #065f46;
+    --button: #065f46;
+    --button-hover: #004b36;
+    --highlight: #ffcb3a;
+    --midlight: #E1403D;
+    --light-border: #c9dcd0;
+    --link: #00a375;
+    --link-hover: #065f46;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: #fffdf7 ;
+  font-family: 'Oxygen', sans-serif;
+}
+
+.information {
+  color: var(--foreground);
+  background: var(--information);
+  border-radius: 10px;
+  height: 50vh !important;
+}
+
+.maps-wrapper {
+  height: 50vh !important;
+}
+
+.highlight {
+  color: var(--foreground);
+  background: var(--highlight);
+}
+
+.park-item-title {
+  border-bottom: 1px solid var(--light-border);
+  padding: .5em 1em;
+}
+
+.park-item {
+  border-bottom: 1px solid var(--light-border);
+  padding: .5em 1em;
+  width: 100%;
+  cursor: pointer;
+}
+
+.park-item:last-child {
+  border-bottom: none;
+}
+
+#park-item-selected {
+  background: var(--link);
+}
+
+html, body {
+  height: 100%;
+}
+
+.mapContainerWrapper{
+  position:relative !important;
+  height: 50vh;
+}
+
+.mapContainerWrapper div:first-child{
+  position:relative !important;
+}
+
+.submit-button {
+  background: var(--button);
+  border-color: var(--button);
+  color: var(--background)
+}
+
+.submit-button:hover {
+  background: var(--button-hover);
+  border-color: var(--button-hover);
+}
+
+.dropdown {
+  background: var(--highlight);
+  color: var(--foreground);
+}
+
+.google-maps-link {
+  color: var(--link);
+}
+
+.google-maps-link:hover {
+  text-decoration: underline;
+  color: var(--link-hover);
+}
