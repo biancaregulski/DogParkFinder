@@ -85,9 +85,6 @@ body {
   width: 100%;
   cursor: pointer;
 }
-.park-item:nth-of-type(odd) {
-  /* background: var(--background-end-rgb); */
-}
 
 .park-item:last-child {
   border-bottom: none;
@@ -96,7 +93,6 @@ body {
 #park-item-selected {
   background: var(--link);
 }
-
 
 html, body {
   height: 100%;

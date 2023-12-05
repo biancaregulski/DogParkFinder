@@ -29,9 +29,11 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Oxygen&display=swap" rel="stylesheet"/>
       </head>
       <body className={inter.className}>
-        <NavBar />
-        <div className="container h-100">
-          {children}
+        <NavBar/>
+        <div className="container h-100 pt-10">
+         <div className=" px-20 mx-20 py-10 h-100">
+            {children}
+          </div>
         </div>
       </body>
     </html>

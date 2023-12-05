@@ -15,7 +15,6 @@ export default function Home() {
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
   const [transportation, setTransportation] = useState(Transportation.DRIVING);
-  const [parkLocation, setParkLocation] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,19 +27,16 @@ export default function Home() {
 
   return (
     <>
-      <div className=" px-20 mx-20 py-10 h-100">
-        <div className="pb-4">
-          <p>Tell us two addresses and we&apos;ll return the closest parks in between them.</p>
-        </div>
-        <AddressForm handleSubmit={handleSubmit}/>
-        { (address1 && address2) && (
-            <>
-              <LocationDisplay address1={address1} address2={address2} transportation={transportation} /> 
-            </>
-          )
-        }
-        <div className="w-full h-screen"></div>
+      <div className="pb-4">
+        <p>Tell us two addresses and we&apos;ll return the closest parks in between them.</p>
       </div>
+      <AddressForm handleSubmit={handleSubmit}/>
+      { (address1 && address2) && (
+          <>
+            <LocationDisplay address1={address1} address2={address2} transportation={transportation} /> 
+          </>
+        )
+      }
     </>
   );
 }
